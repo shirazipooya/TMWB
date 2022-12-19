@@ -1,0 +1,41 @@
+
+@font-face {
+  font-family: "Vazir-Bold-FD";
+  src: url("../fonts/Vazir-Bold-FD.eot");
+  src: url("../fonts/Vazir-Bold-FD.woff2") format("woff2"),
+    url("../fonts/Vazir-Bold-FD.woff") format("woff"),
+    url("../fonts/Vazir-Bold-FD.ttf") format("truetype");
+  font-weight: normal;
+}
+
+* {
+  font-family: "Vazir-Bold-FD" !important;
+  direction: rtl;
+  text-align: right;
+}
+
+
+.form-floating>label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  padding: 1rem .75rem;
+  pointer-events: none;
+  border: 1px solid transparent;
+  transform-origin: 0 0;
+  transition: opacity .1s ease-in-out,transform .1s ease-in-out;
+}
+
+
+.select_file_button {
+  width: 60%;
+  height: 40px;
+  line-height: 40px;
+  border-width: 1px;
+  border-style: dashed;
+  border-radius: 5px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}

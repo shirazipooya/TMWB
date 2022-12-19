@@ -1,0 +1,12 @@
+numpy
+pandas
+openpyxl
+xlrd
+xlsxwriter
+plotly
+dash
+dash-bootstrap-components
+dash-extensions
+dash-mantine-components
+dash-datatables
+dash_iconify
