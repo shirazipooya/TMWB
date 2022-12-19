@@ -2,6 +2,8 @@ from dash import Dash, dcc, html, Input, Output, State
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 from dash_iconify import DashIconify
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
 
 from p import *
 
@@ -203,32 +205,60 @@ home = html.Div(
                                         ),
                                         dmc.AccordionPanel(
                                              children=[
+                                                 html.Div(
+                                                     children=[
+                                                        html.Div(
+                                                            children=[
+                                                                html.Div(
+                                                                    children=[
+                                                                        dbc.Button(
+                                                                            "دانلود فایل نمودار نتایج",
+                                                                            id="pic",
+                                                                            color="link"
+                                                                        ),
+                                                                        dcc.Download(
+                                                                            id="download_pic"
+                                                                        )
+                                                                    ],
+                                                                ),    
+                                                            ],
+                                                            className="col-4 d-flex justify-content-center"
+                                                        ),
+                                                        html.Div(
+                                                            children=[
+                                                                dmc.Button("نمایش نتایج", fullWidth=False, id="show", n_clicks=0)
+                                                            ],
+                                                            className="col-4 d-flex justify-content-center"
+                                                        ),
+                                                        html.Div(
+                                                            children=[
+                                                                html.Div(
+                                                                    children=[
+                                                                        dbc.Button(
+                                                                            "دانلود فایل اکسل نتایج",
+                                                                            id="result",
+                                                                            color="link"
+                                                                        ),
+                                                                        dcc.Download(
+                                                                            id="download_result"
+                                                                        )
+                                                                    ],
+                                                                ),    
+                                                            ],
+                                                            className="col-4 d-flex justify-content-center"
+                                                        ),      
+                                                    ],
+                                                     className="row"
+                                                 ), 
                                                 html.Div(
                                                     children=[
-                                                        dbc.Button(
-                                                            "دانلود فایل نمودار نتایج",
-                                                            id="pic",
-                                                            color="link"
-                                                        ),
-                                                        dcc.Download(
-                                                            id="download_pic"
+                                                        dcc.Graph(
+                                                            id='GRAPH',
+                                                            figure=NO_MATCHING_GRAPH_FOUND
                                                         )
                                                     ],
-                                                    className="px-5"
-                                                ),
-                                                html.Div(
-                                                    children=[
-                                                        dbc.Button(
-                                                            "دانلود فایل اکسل نتایج",
-                                                            id="result",
-                                                            color="link"
-                                                        ),
-                                                        dcc.Download(
-                                                            id="download_result"
-                                                        )
-                                                    ],
-                                                    className="px-5"
-                                                ),
+                                                    dir="rtl"
+                                                )
                                              ]              
                                         ),
                                     ],
@@ -236,6 +266,51 @@ home = html.Div(
                                 ),
                             ],
                         )
+                    ],
+                    md=12
+                )
+            ]
+        ),
+    ]
+)
+
+
+
+methods = html.Div(
+    [
+        dbc.Row(
+            children=[
+                dbc.Col(
+                    children=[
+                        html.H4(
+                            dmc.Text("منابع",  weight=600, align="right"),
+                            className="text-primary m-0 pt-3",
+                        ),
+                        html.P(
+                            [
+                                dmc.Text(
+                                    "Mammoliti, E.; Fronzi, D.; Mancini, A.; Valigi, D.; Tazioli, A. (2021). WaterbalANce, a WebApp for Thornthwaite–Mather Water Balance Computation: Comparison of Applications in Two European Watersheds. Hydrology 2021, 8, 34",
+                                    align="left",
+                                    className="py-2"
+                                ),
+                                dmc.Text(
+                                    "McCabe, G.J.; and Markstrom, S.L. (2007). A monthly water-balance model driven by a graphical user interface: U.S. Geological Survey Open-File report 2007-1088, 6 p",
+                                    align="left",
+                                    className="py-2"
+                                ),
+                                dmc.Text(
+                                    "Thornthwaite, C. W.; & Mather, J. R. (1957). Instructions and tables for computing potential evapotraspiration and the water balance. Johns Hopkins Univ., Laboratory in Climatology, 10 (3) 181-311",
+                                    align="left",
+                                    className="py-2"
+                                ),
+                                dmc.Text(
+                                    "Thornthwaite, C. W.; Mather, J. R. (1955). The water balance. Johns Hopkins Univ., Laboratory in Climatology, 8 (1), 1-104",
+                                    align="left",
+                                    className="py-2"
+                                ),
+                            ],
+                            className="m-0 pt-3",
+                        ),
                     ],
                     md=12
                 )
@@ -284,7 +359,7 @@ app.layout = dmc.NotificationsProvider(
                         ]
                     ),
                     dmc.TabsPanel(home, value="home"),
-                    dmc.TabsPanel("2", value="methods"),
+                    dmc.TabsPanel(methods, value="methods"),
                 ],
                 value="home",
                 color="blue",
@@ -303,6 +378,41 @@ app.layout = dmc.NotificationsProvider(
         ]
     )
 )
+
+
+
+
+
+@app.callback(
+    Output("file_name_upload", "children"),
+    Output("file_name_upload", "className"),
+    Input('upload_data', 'contents'),        
+    State('upload_data', 'filename')
+)
+def name_file_show(
+    file_content,
+    file_name
+):
+    if (file_content is None):
+        
+        result = [
+            "فایلی انتخاب نشده است!",
+            'text-center pt-2 text-danger',
+        ]
+        
+        return result
+    
+    else:
+        
+        result = [
+            file_name,
+            'text-center pt-2 text-success',
+        ]
+        
+        return result
+
+
+
 
 
 @app.callback(
@@ -408,12 +518,239 @@ def calculate_tmwb(
         return 0, notify
 
 
+@app.callback(
+    Output("show", "n_clicks"),
+    Output('GRAPH', 'figure'),
+    Input("show", "n_clicks"), 
+    prevent_initial_call=True,
+)
+def show_result(
+    n,
+):
+    if n != 0:
+        
+        data = pd.read_excel("./result/result.xlsx")
+        data["date"] = data["year"].astype(str) + "-" + data["month"].astype(str) + "-" + "1"
+        data["date"] = pd.to_datetime(data["date"])
+        
+        fig = make_subplots(
+            rows=5,
+            cols=2,
+            shared_xaxes=False,
+            vertical_spacing=0.02
+        )
+        
+        fig.add_trace(
+            go.Scatter(
+                x=data['date'],
+                y=data['Tm'],
+                mode='lines+markers',
+                name='Temp. °C',
+                marker=dict(
+                    color='black',
+                    size=4,
+                ),
+                line=dict(
+                    color='black',
+                    width=1
+                )  
+            ),
+            row=1,
+            col=1
+        )
+        
+        fig.add_trace(
+            go.Bar(
+                x=data['date'],
+                y=data['P'],
+                name='Rainfall [mm]',
+                marker_color="blue"
+ 
+            ),
+            row=1,
+            col=2
+        )
+        
+        fig.add_trace(
+            go.Scatter(
+                x=data['date'],
+                y=data['P'],
+                mode='lines+markers',
+                name='PET [mm]',
+                marker=dict(
+                    color='magenta',
+                    size=4,
+                ),
+                line=dict(
+                    color='magenta',
+                    width=1
+                )  
+            ),
+            row=2,
+            col=1
+        )
+        
+        fig.add_trace(
+            go.Bar(
+                x=data['date'],
+                y=data['delta'],
+                name='P-PET [mm]',
+                marker_color="black"
+            ),
+            row=2,
+            col=2
+        )
+        
+        fig.add_trace(
+            go.Scatter(
+                x=data['date'],
+                y=data['AET'],
+                mode='lines+markers',
+                name='AET [mm]',
+                marker=dict(
+                    color='orange',
+                    size=4,
+                ),
+                line=dict(
+                    color='orange',
+                    width=1
+                )  
+            ),
+            row=3,
+            col=1
+        )
+        
+        fig.add_trace(
+            go.Scatter(
+                x=data['date'],
+                y=data['ST'],
+                mode='lines+markers',
+                name='ST [mm]',
+                marker=dict(
+                    color='red',
+                    size=4,
+                ),
+                line=dict(
+                    color='red',
+                    width=1
+                )  
+            ),
+            row=3,
+            col=2
+        )
+        
+        fig.add_trace(
+            go.Scatter(
+                x=data['date'],
+                y=data['S'],
+                mode='lines+markers',
+                name='S [mm]',
+                marker=dict(
+                    color='darkblue',
+                    size=4,
+                ),
+                line=dict(
+                    color='darkblue',
+                    width=1
+                )  
+            ),
+            row=4,
+            col=1
+        )
+        
+        fig.add_trace(
+            go.Scatter(
+                x=data['date'],
+                y=data['RO'],
+                mode='lines+markers',
+                name='RO [mm]',
+                marker=dict(
+                    color='green',
+                    size=4,
+                ),
+                line=dict(
+                    color='green',
+                    width=1
+                )  
+            ),
+            row=4,
+            col=2
+        )
+        
+        fig.add_trace(
+            go.Scatter(
+                x=data['date'],
+                y=data['SMRO'],
+                mode='lines+markers',
+                name='SMRO [mm]',
+                marker=dict(
+                    color='black',
+                    size=4,
+                ),
+                line=dict(
+                    color='black',
+                    width=1
+                )  
+            ),
+            row=5,
+            col=1
+        )
+        
+        fig.add_trace(
+            go.Scatter(
+                x=data['date'],
+                y=data['TOT_RO'],
+                mode='lines+markers',
+                name='tot RO [mm]',
+                marker=dict(
+                    color='blue',
+                    size=4,
+                ),
+                line=dict(
+                    color='blue',
+                    width=1
+                )  
+            ),
+            row=5,
+            col=2
+        )
+        
+               
+        fig.update_yaxes(title_text='Temp. [°C]', row=1, col=1)
+        fig.update_yaxes(title_text='Rainfall [mm]', row=1, col=2)
+        fig.update_yaxes(title_text='PET [mm]', row=2, col=1)
+        fig.update_yaxes(title_text='P-PET [mm]', row=2, col=2)
+        fig.update_yaxes(title_text='AET [mm]', row=3, col=1)
+        fig.update_yaxes(title_text='ST [mm]', row=3, col=2)
+        fig.update_yaxes(title_text='S [mm]', row=4, col=1)
+        fig.update_yaxes(title_text='RO [mm]', row=4, col=2)
+        fig.update_yaxes(title_text='SMRO [mm]', row=5, col=1)
+        fig.update_yaxes(title_text='tot RO [mm]', row=5, col=2)
+        
+        fig.update_xaxes(title_text='Time [months]', row=5, col=1)
+        fig.update_xaxes(title_text='Time [months]', row=5, col=2)
 
+        
+        
+        fig.update_layout(
+            showlegend=False,
+            height=1000,
+            xaxis=dict(
+                tickformat="%Y-%m",
+            ),
+        )        
+        
+        
+        return 0, fig
+    
+    else:
+        
+        return 0, NO_MATCHING_GRAPH_FOUND
 
 
 if __name__ == '__main__':
     app.run(
         host="127.0.0.1",
-        port=13631,
+        port=50505,
         debug=True
     )

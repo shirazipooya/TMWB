@@ -6,6 +6,26 @@ import pandas as pd
 
 URL_K_LAT_DATA = "./assets/K_latN_S.csv"
 
+
+NO_MATCHING_GRAPH_FOUND = {
+    "layout": {
+        "xaxis": {"visible": False},
+        "yaxis": {"visible": False},
+        "annotations": [
+            {
+                "text": "No Graph Found",
+                "xref": "paper",
+                "yref": "paper",
+                "showarrow": False,
+                "font": {"size": 24}
+            }
+        ]
+    }
+}
+
+
+
+
 def read_data_from_spreadsheet(
     contents,
     filename
@@ -21,6 +41,9 @@ def read_data_from_spreadsheet(
             return data, spreadsheet_file.sheet_names
         else:
             return None, None
+
+
+
 
 
 def negative_pow(x, n):
