@@ -1,3 +1,5 @@
+import base64
+import os
 from dash import Dash, dcc, html, Input, Output, State
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
@@ -6,6 +8,13 @@ from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
 from p import *
+
+
+image_filename = os.getcwd() + "/static/images/Method.png" # replace with your own image
+encoded_image = base64.b64encode(open(image_filename, 'rb').read())
+
+image_filename2 = os.getcwd() + "/static/images/Workflow.png" # replace with your own image
+encoded_image2 = base64.b64encode(open(image_filename2, 'rb').read())
 
 
 external_stylesheets=[
@@ -278,6 +287,136 @@ home = html.Div(
 
 methods = html.Div(
     [
+        dbc.Row(
+            children=[
+                dbc.Col(
+                    children=[
+                        html.H4(
+                            dmc.Text("روش",  weight=600, align="right"),
+                            className="text-primary m-0 pt-3",
+                        ),
+                        html.Div(
+                            html.Img(src='data:image/png;base64,{}'.format(encoded_image.decode()), width=1000),
+                            className="text-center"
+                        ),
+                    ],
+                    md=12
+                )
+            ]
+        ),
+        dbc.Row(
+            children=[
+                dbc.Col(
+                    children=[
+                        html.H4(
+                            dmc.Text("جریان کاری",  weight=600, align="right"),
+                            className="text-primary m-0 pt-3",
+                        ),
+                        html.Div(
+                            html.Img(src='data:image/png;base64,{}'.format(encoded_image2.decode()), width=1000),
+                            className="text-center"
+                        ),
+                    ],
+                    md=12
+                )
+            ]
+        ),
+        dbc.Row(
+            children=[
+                dbc.Col(
+                    children=[
+                        html.H4(
+                            dmc.Text("ورودی‌ها",  weight=600, align="right"),
+                            className="text-primary m-0 pt-3",
+                        ),
+                        html.P(
+                            [
+                                dmc.Text(
+                                    "P = monthly precipitation (mm)",
+                                    align="left",
+                                ),
+                                dmc.Text(
+                                    "Tm = mean monthly temperature (°C)",
+                                    align="left",
+                                ),
+                                dmc.Text(
+                                    "LAT = latitude",
+                                    align="left",
+                                ),
+                                dmc.Text(
+                                    "SM = soil moisture storage capacity value (mm)",
+                                    align="left",
+                                ),
+                                dmc.Text(
+                                    "beta = dimensionless runoff coefficient (percent)",
+                                    align="left",
+                                ),
+                                dmc.Text(
+                                    "SRT = snowfall rainfall threshold (°C)",
+                                    align="left",
+                                ),
+                            ],
+                            className="m-0 pt-3",
+                        ),
+                    ],
+                    md=12
+                )
+            ]
+        ),
+        dbc.Row(
+            children=[
+                dbc.Col(
+                    children=[
+                        html.H4(
+                            dmc.Text("خروجی‌ها",  weight=600, align="right"),
+                            className="text-primary m-0 pt-3",
+                        ),
+                        html.P(
+                            [
+                                dmc.Text(
+                                    "PET = monthly potential evapotranspiration (mm)",
+                                    align="left",
+                                ),
+                                dmc.Text(
+                                    "delta = P-PET (mm)",
+                                    align="left",
+                                ),
+                                dmc.Text(
+                                    "AET = monthly actual evapotranspiration (mm)",
+                                    align="left",
+                                ),
+                                dmc.Text(
+                                    "ST = monthly soil moisture (mm)",
+                                    align="left",
+                                ),
+                                dmc.Text(
+                                    "S = monthly water surplus (mm)",
+                                    align="left",
+                                ),
+                                dmc.Text(
+                                    "RO = monthly runoff (mm)",
+                                    align="left",
+                                ),
+                                dmc.Text(
+                                    "RES = dynamic water storage available for the next month (mm)",
+                                    align="left",
+                                ),
+                                dmc.Text(
+                                    "SMRO = monthly snow melt runoff (mm)",
+                                    align="left",
+                                ),
+                                dmc.Text(
+                                    "TOT RO = monthly total runoff (mm)",
+                                    align="left",
+                                ),
+                            ],
+                            className="m-0 pt-3",
+                        ),
+                    ],
+                    md=12
+                )
+            ]
+        ),
         dbc.Row(
             children=[
                 dbc.Col(
