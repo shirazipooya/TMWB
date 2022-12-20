@@ -296,7 +296,7 @@ methods = html.Div(
                             className="text-primary m-0 pt-3",
                         ),
                         html.Div(
-                            html.Img(src='data:image/png;base64,{}'.format(encoded_image.decode()), width=1000),
+                            html.Img(src='data:image/png;base64,{}'.format(encoded_image.decode()), width=1200),
                             className="text-center"
                         ),
                     ],
@@ -313,7 +313,7 @@ methods = html.Div(
                             className="text-primary m-0 pt-3",
                         ),
                         html.Div(
-                            html.Img(src='data:image/png;base64,{}'.format(encoded_image2.decode()), width=1000),
+                            html.Img(src='data:image/png;base64,{}'.format(encoded_image2.decode()), width=1200),
                             className="text-center"
                         ),
                     ],
